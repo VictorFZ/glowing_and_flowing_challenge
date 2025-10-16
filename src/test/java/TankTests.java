@@ -26,7 +26,7 @@ public class TankTests {
 
         var calculator = new TankCalculator(inputs);
 
-        var result = calculator.doCalculation();
+        var result = calculator.calculateOverflow();
 
         assertEquals(output, result);
     }

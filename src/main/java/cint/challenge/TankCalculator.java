@@ -21,6 +21,9 @@ public class TankCalculator {
         var tankCount = Integer.parseInt(tankCountAndFlowRate[0]);
         var flowRate = Integer.parseInt(tankCountAndFlowRate[1]);
 
+        if(flowRate <= 0)
+            throw new IllegalArgumentException("Input not in correct format: Flow rate must be greater than 0");
+
         var tankCapacities = Arrays.stream(inputs).skip(1).toArray(String[]::new);
 
         if(tankCapacities.length != tankCount)
@@ -33,7 +36,7 @@ public class TankCalculator {
         this.flowRate = flowRate;
     }
 
-    public String doCalculation() {
+    public String calculateOverflow() {
 
         TreeSet<Double> tanksTimeToFillSorted = new TreeSet<>();
 
