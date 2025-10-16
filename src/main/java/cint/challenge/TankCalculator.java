@@ -34,24 +34,21 @@ public class TankCalculator {
     }
 
     public String doCalculation() {
-        ArrayList<Double> tanksTimeToFill = new ArrayList<>();
         TreeSet<Double> tanksTimeToFillSorted = new TreeSet<>();
 
-        var firstTankOverflowTimeInSeconds = (double) tankCapacities[0] / flowRate;
+        var lastTankOverflowInSeconds = (double) tankCapacities[0] / flowRate;
 
-        tanksTimeToFill.add(firstTankOverflowTimeInSeconds);
-        tanksTimeToFillSorted.add(firstTankOverflowTimeInSeconds);
+        tanksTimeToFillSorted.add(lastTankOverflowInSeconds);
 
-        var maxTankOverflowTimeInSeconds = firstTankOverflowTimeInSeconds;
+        var maxTankOverflowTimeInSeconds = lastTankOverflowInSeconds;
 
         for (int i = 1; i < tankCapacities.length; i++) {
             double tankCapacity = tankCapacities[i];
-            double previousTankTimeToFill = tanksTimeToFill.get(i - 1);
             double timeToFill = (double) tankCapacity / flowRate;
             double currentTimeToFill;
 
-            if (timeToFill > previousTankTimeToFill) {
-                double aloneFillingInSeconds = previousTankTimeToFill;
+            if (timeToFill > lastTankOverflowInSeconds) {
+                double aloneFillingInSeconds = lastTankOverflowInSeconds;
 
                 double fillingLeftTimeInSeconds = tankCapacity - (aloneFillingInSeconds * flowRate);
 
@@ -67,11 +64,9 @@ public class TankCalculator {
                 maxTankOverflowTimeInSeconds = currentTimeToFill;
             }
 
-            tanksTimeToFill.add(currentTimeToFill);
+            lastTankOverflowInSeconds = currentTimeToFill;
             tanksTimeToFillSorted.add(currentTimeToFill);
         }
-
-        var lastTankOverflowInSeconds = tanksTimeToFill.getLast();
 
         return String.format("%d %d", (int)Math.floor(lastTankOverflowInSeconds), (int) Math.floor(maxTankOverflowTimeInSeconds));
     }
