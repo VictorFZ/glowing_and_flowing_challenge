@@ -1,23 +1,46 @@
 package org.example;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.TreeSet;
 
 public class TankCalculator {
     private final int[] tankCapacities;
     private final int flowRate;
 
-    public TankCalculator(int[] tankCapacities, int flowRate){
-        this.tankCapacities = tankCapacities;
+    public TankCalculator(String[] inputs) throws IllegalArgumentException {
+
+        if(inputs == null || inputs.length == 0)
+            throw new IllegalArgumentException("Input not in correct format: Missing inputs");
+
+        var tankCountAndFlowRate = inputs[0].split(" ");
+
+        if(tankCountAndFlowRate.length != 2)
+            throw new IllegalArgumentException("Input not in correct format: First line is not in correct format");
+
+        var tankCount = Integer.parseInt(tankCountAndFlowRate[0]);
+        var flowRate = Integer.parseInt(tankCountAndFlowRate[1]);
+
+        var tankCapacities = Arrays.stream(inputs).skip(1).toArray(String[]::new);
+
+        if(tankCapacities.length != tankCount)
+            throw new IllegalArgumentException("Input not in correct format: Tank count mismatch");
+
+        this.tankCapacities = Arrays.stream(tankCapacities)
+                .mapToInt(Integer::parseInt)
+                .toArray();
+
         this.flowRate = flowRate;
     }
 
-    public TankCalculatorResult doCalculation() {
+    public String doCalculation() {
         ArrayList<Double> tanksTimeToFill = new ArrayList<>();
+        TreeSet<Double> sortedTimes = new TreeSet<>();
 
-        double maxTankOverflowTimeInSeconds = (double) tankCapacities[0] / flowRate;
-        tanksTimeToFill.add(maxTankOverflowTimeInSeconds);
+        var firstTankOverflowTimeInSeconds = (double) tankCapacities[0] / flowRate;
 
-        double lastTankOverflowInSeconds = 0;
+        tanksTimeToFill.add(firstTankOverflowTimeInSeconds);
+        sortedTimes.add(firstTankOverflowTimeInSeconds);
 
         for (int i = 1; i < tankCapacities.length; i++) {
             double tankCapacity = tankCapacities[i];
@@ -27,30 +50,23 @@ public class TankCalculator {
 
             if (timeToFill > previousTankTimeToFill) {
                 double aloneFillingInSeconds = previousTankTimeToFill;
-                double fillingLeftTimeInSeconds = tankCapacity - (aloneFillingInSeconds * flowRate);
-                int count = 0;
 
-                for (int j = 0; j < i; j++) {
-                    if (tanksTimeToFill.get(j) < timeToFill) {
-                        count++;
-                    }
-                }
+                double fillingLeftTimeInSeconds = tankCapacity - (aloneFillingInSeconds * flowRate);
+
+                int count = sortedTimes.headSet(timeToFill).size();
+
                 currentTimeToFill = aloneFillingInSeconds + (fillingLeftTimeInSeconds / (flowRate * (count + 1)));
             } else {
                 currentTimeToFill = (double) tankCapacity / flowRate;
             }
 
             tanksTimeToFill.add(currentTimeToFill);
-
-            if (i == tankCapacities.length - 1) {
-                lastTankOverflowInSeconds = currentTimeToFill;
-            }
-
-            if (currentTimeToFill > maxTankOverflowTimeInSeconds) {
-                maxTankOverflowTimeInSeconds = currentTimeToFill;
-            }
+            sortedTimes.add(currentTimeToFill);
         }
 
-        return new TankCalculatorResult((int) Math.floor(lastTankOverflowInSeconds), (int) Math.floor(maxTankOverflowTimeInSeconds));
+        var maxTankOverflowTimeInSeconds = sortedTimes.last();
+        var lastTankOverflowInSeconds = tanksTimeToFill.getLast();
+
+        return String.format("%d %d", (int)Math.floor(lastTankOverflowInSeconds), (int) Math.floor(maxTankOverflowTimeInSeconds));
     }
 }

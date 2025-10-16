@@ -8,21 +8,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TankTests {
     static Stream<Arguments> tankTestCases() {
         return Stream.of(
-                Arguments.of(new int[]{4, 6}, 2, 2, 2),
-                Arguments.of(new int[]{30, 3, 7, 20}, 1, 10, 30),
-                Arguments.of(new int[]{100000000, 99999999, 10000000, 1000000, 900000, 90000, 9000, 800, 80, 777}, 7, 61, 14285714)
+                Arguments.of(new String[]{"2 2", "4", "6"}, "2 2"),
+                Arguments.of(new String[]{"4 1", "30", "3", "7", "20"}, "10 30"),
+                Arguments.of(new String[]{"10 7", "100000000", "99999999", "10000000", "1000000", "900000", "90000", "9000", "800", "80", "777"}, "61 14285714")
         );
     }
 
     @ParameterizedTest()
     @MethodSource("tankTestCases")
-    void shouldCalculateOverflowTime(int[] tanks, int flowRate, int lastTankOverflowInSeconds, int maxTankOverflowTimeInSeconds) {
+    void shouldCalculateOverflowTime(String[] inputs, String output) {
 
-        var calculator = new TankCalculator(tanks, flowRate);
+        var calculator = new TankCalculator(inputs);
 
         var result = calculator.doCalculation();
 
-        assertEquals(result.LastTankOverflowInSeconds, lastTankOverflowInSeconds);
-        assertEquals(result.MaxTankOverflowTimeInSeconds, maxTankOverflowTimeInSeconds);
+        assertEquals(result, output);
     }
 }
