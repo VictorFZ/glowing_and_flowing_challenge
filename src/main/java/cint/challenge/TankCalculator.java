@@ -48,13 +48,11 @@ public class TankCalculator {
             double currentTimeToFill;
 
             if (timeToFill > lastTankOverflowInSeconds) {
-                double aloneFillingInSeconds = lastTankOverflowInSeconds;
-
-                double fillingLeftTimeInSeconds = tankCapacity - (aloneFillingInSeconds * flowRate);
+                double fillingLeftTimeInSeconds = tankCapacity - (lastTankOverflowInSeconds * flowRate);
 
                 int tankCountWithSmallerTimeToFill = tanksTimeToFillSorted.headSet(timeToFill).size();
 
-                currentTimeToFill = aloneFillingInSeconds + (fillingLeftTimeInSeconds / (flowRate * (tankCountWithSmallerTimeToFill + 1)));
+                currentTimeToFill = lastTankOverflowInSeconds + (fillingLeftTimeInSeconds / (flowRate * (tankCountWithSmallerTimeToFill + 1)));
             } else {
                 currentTimeToFill = (double) tankCapacity / flowRate;
                 tanksTimeToFillSorted = new TreeSet<>();
