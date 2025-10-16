@@ -1,4 +1,4 @@
-package org.example;
+package cint.challenge;
 
 import java.util.ArrayList;
 import java.util.Arrays;

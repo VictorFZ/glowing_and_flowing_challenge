@@ -1,4 +1,4 @@
-import org.example.TankCalculator;
+import cint.challenge.TankCalculator;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.Arguments;
