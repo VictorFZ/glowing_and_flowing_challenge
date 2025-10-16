@@ -42,6 +42,8 @@ public class TankCalculator {
         tanksTimeToFill.add(firstTankOverflowTimeInSeconds);
         tanksTimeToFillSorted.add(firstTankOverflowTimeInSeconds);
 
+        var maxTankOverflowTimeInSeconds = firstTankOverflowTimeInSeconds;
+
         for (int i = 1; i < tankCapacities.length; i++) {
             double tankCapacity = tankCapacities[i];
             double previousTankTimeToFill = tanksTimeToFill.get(i - 1);
@@ -59,14 +61,16 @@ public class TankCalculator {
             } else {
                 currentTimeToFill = (double) tankCapacity / flowRate;
                 tanksTimeToFillSorted = new TreeSet<>();
-                tanksTimeToFillSorted.add(firstTankOverflowTimeInSeconds);
+            }
+
+            if(currentTimeToFill > maxTankOverflowTimeInSeconds) {
+                maxTankOverflowTimeInSeconds = currentTimeToFill;
             }
 
             tanksTimeToFill.add(currentTimeToFill);
             tanksTimeToFillSorted.add(currentTimeToFill);
         }
 
-        var maxTankOverflowTimeInSeconds = tanksTimeToFillSorted.last();
         var lastTankOverflowInSeconds = tanksTimeToFill.getLast();
 
         return String.format("%d %d", (int)Math.floor(lastTankOverflowInSeconds), (int) Math.floor(maxTankOverflowTimeInSeconds));
