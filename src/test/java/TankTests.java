@@ -22,6 +22,6 @@ public class TankTests {
 
         var result = calculator.doCalculation();
 
-        assertEquals(result, output);
+        assertEquals(output, result);
     }
 }

@@ -58,6 +58,8 @@ public class TankCalculator {
                 currentTimeToFill = aloneFillingInSeconds + (fillingLeftTimeInSeconds / (flowRate * (tankCountWithSmallerTimeToFill + 1)));
             } else {
                 currentTimeToFill = (double) tankCapacity / flowRate;
+                tanksTimeToFillSorted = new TreeSet<>();
+                tanksTimeToFillSorted.add(firstTankOverflowTimeInSeconds);
             }
 
             tanksTimeToFill.add(currentTimeToFill);
